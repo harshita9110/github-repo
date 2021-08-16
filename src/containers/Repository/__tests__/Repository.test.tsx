@@ -113,7 +113,7 @@ describe('Repository', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('Unable to get repositories for owner netflix')).toBeInTheDocument();
+      expect(getByText('Unable to get commit details')).toBeInTheDocument();
     });
   });
 });

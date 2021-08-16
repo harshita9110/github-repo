@@ -80,4 +80,68 @@ describe('Repository Detaills', () => {
     });
     expect(queryByText('test message')).not.toBeInTheDocument();
   });
+
+  test('should render loading state correctly', async () => {
+    const { getByTestId } = render(
+      <MockedProvider mocks={mock}>
+        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+      </MockedProvider>
+    );
+    act(() => {
+      fireEvent.click(getByTestId('commits'));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    await waitFor(() => {
+      expect(getByTestId('loader')).toBeInTheDocument();
+    });
+  });
+
+  test('should render loading state correctly', async () => {
+    const { getByTestId } = render(
+      <MockedProvider mocks={mock}>
+        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+      </MockedProvider>
+    );
+    act(() => {
+      fireEvent.click(getByTestId('commits'));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    await waitFor(() => {
+      expect(getByTestId('loader')).toBeInTheDocument();
+    });
+  });
+
+  test('should render error state correctly', async () => {
+    const { getByTestId, getByText } = render(
+      <MockedProvider
+        mocks={[
+          {
+            request: {
+              query: RecentCommitsQuery,
+              variables: {
+                owner: 'netflix',
+                name: 'testrepo',
+              },
+            },
+            error: new Error('An error occurred'),
+          },
+        ]}
+      >
+        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+      </MockedProvider>
+    );
+    act(() => {
+      fireEvent.click(getByTestId('commits'));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    await waitFor(() => {
+      expect(getByText('Unable to get commit details')).toBeInTheDocument();
+    });
+  });
 });

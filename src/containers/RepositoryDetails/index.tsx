@@ -131,15 +131,15 @@ export const RepositoryDetails: FC<RepositoryDetailsProps> = ({
       <Detail onClick={toggleCommitsExpanded} data-testid="commits">
         {commitsExpanded ? <DownArrowIcon /> : <RightArrowIcon />}Commits
       </Detail>
+      {loading && <Loader />}
+      {error && (
+        <ErrorContainer>
+          <StyledError />
+          Unable to get commit details
+        </ErrorContainer>
+      )}
       {commitsExpanded && commits && (
         <CommitContainer>
-          {loading && <Loader />}
-          {error && (
-            <ErrorContainer>
-              <StyledError />
-              {'Unable to get details'}
-            </ErrorContainer>
-          )}
           {!loading && !error && (
             <CommitsGrid>
               {commits.map((commit, index) => {
