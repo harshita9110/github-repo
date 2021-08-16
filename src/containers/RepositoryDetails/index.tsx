@@ -6,7 +6,7 @@ import { DownArrow } from '@styled-icons/boxicons-regular/DownArrow';
 import { GitRepoForked } from '@styled-icons/boxicons-regular/GitRepoForked';
 import { Description } from '@styled-icons/material/Description';
 import { Error } from '@styled-icons/boxicons-regular/Error';
-import { RecentCommitsQuery } from './RecentCommit.graphql';
+import { RecentCommitsQuery } from './RecentCommits.graphql';
 import { RecentCommitsType, RecentCommitsArguments } from './__types__/RecentCommits';
 import { Loader } from '../../components/Loader';
 
@@ -107,23 +107,19 @@ export const RepositoryDetails: FC<RepositoryDetailsProps> = ({
     const newCommitsExpanded = !commitsExpanded;
     setCommitsExpanded(newCommitsExpanded);
     if (newCommitsExpanded) {
-      getCommits();
+      getRepositoryCommits({
+        variables: {
+          owner,
+          name,
+        },
+      });
     }
-  };
-
-  const getCommits = () => {
-    getRepositoryCommits({
-      variables: {
-        owner,
-        name,
-      },
-    });
   };
 
   const commits = data?.repository?.ref?.target?.history?.edges;
 
   return (
-    <RepositoryDetailsContainer>
+    <RepositoryDetailsContainer data-testid="repository_details">
       <Detail>
         <DescriptionIcon />
         Description: {description || 'No description'}
@@ -132,7 +128,7 @@ export const RepositoryDetails: FC<RepositoryDetailsProps> = ({
         <ForkIcon />
         Fork Count: {forkCount || 0}
       </Detail>
-      <Detail onClick={toggleCommitsExpanded}>
+      <Detail onClick={toggleCommitsExpanded} data-testid="commits">
         {commitsExpanded ? <DownArrowIcon /> : <RightArrowIcon />}Commits
       </Detail>
       {commitsExpanded && commits && (

@@ -10,8 +10,8 @@ describe('SearchBar', () => {
     const onSearch = jest.fn();
     const { getByTestId } = render(<SearchBar onSearch={onSearch} />);
 
-    fireEvent.change(getByTestId('Search_input'), { target: { value: 'netflix' } });
-    fireEvent.click(getByTestId('Search_button'));
+    fireEvent.change(getByTestId('search_input'), { target: { value: 'netflix' } });
+    fireEvent.click(getByTestId('search_button'));
     expect(onSearch).toHaveBeenCalledWith('netflix');
   });
 });

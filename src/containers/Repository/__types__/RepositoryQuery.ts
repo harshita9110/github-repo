@@ -15,8 +15,6 @@ export interface Organization { repositories: Repositories|null }
 
 export interface OwnerRepositoriesType { organization: Organization|null }
 
-//export interface OwnerRepositoriesType { data: Data|null }
-
 export interface OwnerRepositoryQueryArgument {
     owner:string;
 }

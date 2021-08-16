@@ -22,4 +22,4 @@ const LoaderContainer = styled.div`
   margin-top: 1rem;
 `;
 
-export const Loader = () => <LoaderContainer />;
+export const Loader = () => <LoaderContainer data-testid="loader" />;

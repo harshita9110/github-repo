@@ -67,9 +67,9 @@ export const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
         value={searchText}
         placeholder="Enter repository name ..."
         onKeyPress={handleSearchEnter}
-        data-testid="Search_input"
+        data-testid="search_input"
       />
-      <SearchButton onClick={handleSearchClicked} data-testid="Search_button">
+      <SearchButton onClick={handleSearchClicked} data-testid="search_button">
         <SearchIcon />
       </SearchButton>
     </SearchBarComponent>
