@@ -12,7 +12,14 @@ In the project directory, you can run:
 
 Install all the dependencies to start the app.
 
-### `yarn start`
+### `REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN=$YOUR_TOKEN yarn start`
+
+For eg, REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN=abc yarn start
+
+1. To generate a personal access token follow the following steps. Make sure you check `repo` and `read:org` permissions when generating a token :
+https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token 
+
+
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
