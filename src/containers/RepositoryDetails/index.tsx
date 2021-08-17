@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client';
 import { RightArrow } from '@styled-icons/boxicons-regular/RightArrow';
 import { DownArrow } from '@styled-icons/boxicons-regular/DownArrow';
 import { GitRepoForked } from '@styled-icons/boxicons-regular/GitRepoForked';
-import { Description } from '@styled-icons/material/Description';
+import { Star } from '@styled-icons/boxicons-regular/Star';
 import { Error } from '@styled-icons/boxicons-regular/Error';
 import { RecentCommitsQuery } from './RecentCommits.graphql';
 import { RecentCommitsType, RecentCommitsArguments } from './__types__/RecentCommits';
@@ -15,6 +15,7 @@ export type RepositoryDetailsProps = {
   name: string;
   description: string | null | undefined;
   forkCount: number | null | undefined;
+  stargazers: number | null | undefined;
 };
 
 const RepositoryDetailsContainer = styled.div`
@@ -25,26 +26,28 @@ const RepositoryDetailsContainer = styled.div`
 `;
 
 const CommitContainer = styled.div`
-  font-size: 0.75rem;
+  font-size: 1rem;
 `;
 
 const Detail = styled.div`
-  display: block;
-  font-size: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  font-size: 1.25rem;
+  align-items: center;
   word-wrap: break-word;
-  padding: 0.25rem;
+  padding: 0.5rem;
 `;
 
 const RightArrowIcon = styled(RightArrow)`
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 1rem;
+  height: 1rem;
   color: #727272;
   cursor: pointer;
 `;
 
 const DownArrowIcon = styled(DownArrow)`
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 1rem;
+  height: 1rem;
   color: #727272;
   cursor: pointer;
 `;
@@ -52,13 +55,13 @@ const DownArrowIcon = styled(DownArrow)`
 const ForkIcon = styled(GitRepoForked)`
   width: 1rem;
   height: 1rem;
-  color: #00ff00;
+  color: #00a300;
 `;
 
-const DescriptionIcon = styled(Description)`
+const StarIcon = styled(Star)`
   width: 1rem;
   height: 1rem;
-  color: #727272;
+  color: #0e86d4;
 `;
 
 const StyledError = styled(Error)`
@@ -79,7 +82,10 @@ const StyledRow = styled.tr`
 `;
 
 const ErrorContainer = styled.div`
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 0.75rem;
   font-size: 1rem;
   color: #ff0000;
 `;
@@ -91,11 +97,16 @@ const CommitsGrid = styled.table`
   width: 100%;
 `;
 
+const StyledAnchor = styled.a`
+  color: #055c9d;
+`;
+
 export const RepositoryDetails: FC<RepositoryDetailsProps> = ({
   owner,
   name,
   description,
   forkCount,
+  stargazers,
 }) => {
   const [commitsExpanded, setCommitsExpanded] = useState<boolean>(false);
   const [getRepositoryCommits, { loading, error, data }] = useLazyQuery<
@@ -120,15 +131,16 @@ export const RepositoryDetails: FC<RepositoryDetailsProps> = ({
 
   return (
     <RepositoryDetailsContainer data-testid="repository_details">
-      <Detail>
-        <DescriptionIcon />
-        Description: {description || 'No description'}
-      </Detail>
+      <Detail style={{ fontStyle: 'italic' }}>{description || 'No description'}</Detail>
       <Detail>
         <ForkIcon />
         Fork Count: {forkCount || 0}
       </Detail>
-      <Detail onClick={toggleCommitsExpanded} data-testid="commits">
+      <Detail>
+        <StarIcon />
+        StarGazers: {stargazers || 0}
+      </Detail>
+      <Detail style={{ cursor: 'pointer' }} onClick={toggleCommitsExpanded} data-testid="commits">
         {commitsExpanded ? <DownArrowIcon /> : <RightArrowIcon />}Commits
       </Detail>
       {loading && <Loader />}
@@ -152,7 +164,7 @@ export const RepositoryDetails: FC<RepositoryDetailsProps> = ({
                   <tbody key={index}>
                     <StyledRow key={index}>
                       <StyledCol key={id}>
-                        {commitUrl && <a href={commitUrl}>{message}</a>}
+                        {commitUrl && <StyledAnchor href={commitUrl}>{message}</StyledAnchor>}
                         {!commitUrl && 'No commit found'}
                       </StyledCol>
                       <StyledCol key={`${id}-desc`}>

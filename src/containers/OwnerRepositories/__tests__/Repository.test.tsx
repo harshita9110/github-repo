@@ -3,7 +3,7 @@ import React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, cleanup, fireEvent, act, waitFor } from '@testing-library/react';
 import { OwnerRepositoryQuery } from '../Respository.graphql';
-import { Repository } from '../index';
+import { OwnerRepositories } from '../index';
 afterEach(cleanup);
 
 describe('Repository', () => {
@@ -18,6 +18,10 @@ describe('Repository', () => {
       result: {
         data: {
           organization: {
+            name: 'Netflix',
+            location: 'test location',
+            description: 'test description',
+            avatarUrl: 'test.com',
             repositories: {
               edges: [
                 {
@@ -28,6 +32,7 @@ describe('Repository', () => {
                     description: 'test desc 1',
                     openGraphImageUrl: 'test',
                     id: 'MDEwOlJlcG9zaXRvcnkyMDQ0MDI5',
+                    stargazers: { totalCount: 10 },
                   },
                 },
                 {
@@ -38,6 +43,7 @@ describe('Repository', () => {
                     description: 'test desc 2',
                     openGraphImageUrl: 'test',
                     id: 'MDEwOlJlcG9zaXRvcnkyMDQ5Mzc5',
+                    stargazers: { totalCount: 10 },
                   },
                 },
               ],
@@ -47,10 +53,18 @@ describe('Repository', () => {
       },
     },
   ];
+  const match = {
+    params: {
+      project: '',
+    },
+    isExact: false,
+    url: '',
+    path: '',
+  };
   test('should render repository component correctly', async () => {
     const { getByTestId, getByText } = render(
       <MockedProvider mocks={mock}>
-        <Repository />
+        <OwnerRepositories match={match} />
       </MockedProvider>
     );
     expect(getByTestId('repository-container')).toBeVisible();
@@ -71,10 +85,40 @@ describe('Repository', () => {
     });
   });
 
+  test('should render repository component correctly if match exists', async () => {
+    const { getByTestId, getByText } = render(
+      <MockedProvider mocks={mock}>
+        <OwnerRepositories
+          match={{
+            params: {
+              project: 'netflix',
+            },
+            isExact: false,
+            url: '',
+            path: '',
+          }}
+        />
+      </MockedProvider>
+    );
+    expect(getByTestId('repository-container')).toBeVisible();
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    await waitFor(() => {
+      expect(getByText('test1')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(getByText('test2')).toBeInTheDocument();
+    });
+  });
+
   test('should render loading state correctly', async () => {
     const { getByTestId } = render(
       <MockedProvider mocks={mock}>
-        <Repository />
+        <OwnerRepositories match={match} />
       </MockedProvider>
     );
     expect(getByTestId('repository-container')).toBeVisible();
@@ -103,7 +147,7 @@ describe('Repository', () => {
           },
         ]}
       >
-        <Repository />
+        <OwnerRepositories match={match} />
       </MockedProvider>
     );
     expect(getByTestId('repository-container')).toBeVisible();
@@ -113,7 +157,7 @@ describe('Repository', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('Unable to get commit details')).toBeInTheDocument();
+      expect(getByText('Unable to get repositories for owner netflix')).toBeInTheDocument();
     });
   });
 });

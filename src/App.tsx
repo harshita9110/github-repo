@@ -1,13 +1,19 @@
 import React from 'react';
-import { Repository } from './containers/Repository';
+import { OwnerRepositories } from './containers/OwnerRepositories';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <Repository />
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/:project" component={OwnerRepositories} />
+          <Route path="/" component={OwnerRepositories} />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

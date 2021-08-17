@@ -2,6 +2,8 @@
 
 This project allows user to search for a repository on github and returns the first 100 repos sorted by number of Stargazers. When you expand the commits section you can browse the top 5 commits.
 
+You can either search for your organization or go to /:organizationName to get details about your org.
+
 ## Available Scripts
 
 In the project directory, you can run:

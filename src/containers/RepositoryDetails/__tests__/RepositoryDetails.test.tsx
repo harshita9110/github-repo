@@ -47,10 +47,17 @@ describe('Repository Detaills', () => {
       },
     },
   ];
+
   test('should render repository component correctly', async () => {
     const { getByTestId, getByText, queryByText } = render(
       <MockedProvider mocks={mock}>
-        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+        <RepositoryDetails
+          description="test"
+          name="testrepo"
+          owner="netflix"
+          forkCount={32}
+          stargazers={10}
+        />
       </MockedProvider>
     );
     expect(getByTestId('repository_details')).toBeVisible();
@@ -61,7 +68,13 @@ describe('Repository Detaills', () => {
   test('should render commits when expanded', async () => {
     const { getByTestId, getByText, queryByText } = render(
       <MockedProvider mocks={mock}>
-        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+        <RepositoryDetails
+          description="test"
+          name="testrepo"
+          owner="netflix"
+          forkCount={32}
+          stargazers={10}
+        />
       </MockedProvider>
     );
     act(() => {
@@ -84,24 +97,13 @@ describe('Repository Detaills', () => {
   test('should render loading state correctly', async () => {
     const { getByTestId } = render(
       <MockedProvider mocks={mock}>
-        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
-      </MockedProvider>
-    );
-    act(() => {
-      fireEvent.click(getByTestId('commits'));
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-    await waitFor(() => {
-      expect(getByTestId('loader')).toBeInTheDocument();
-    });
-  });
-
-  test('should render loading state correctly', async () => {
-    const { getByTestId } = render(
-      <MockedProvider mocks={mock}>
-        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+        <RepositoryDetails
+          description="test"
+          name="testrepo"
+          owner="netflix"
+          forkCount={32}
+          stargazers={10}
+        />
       </MockedProvider>
     );
     act(() => {
@@ -131,7 +133,13 @@ describe('Repository Detaills', () => {
           },
         ]}
       >
-        <RepositoryDetails description="test" name="testrepo" owner="netflix" forkCount={32} />
+        <RepositoryDetails
+          description="test"
+          name="testrepo"
+          owner="netflix"
+          forkCount={32}
+          stargazers={10}
+        />
       </MockedProvider>
     );
     act(() => {

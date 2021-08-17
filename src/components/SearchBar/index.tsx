@@ -9,7 +9,7 @@ const SearchBarComponent = styled.div`
   display: flex;
   width:100%
   max-width: 40rem;
-  height: 2.1875rem;
+  height: 2.5rem;
   justify-content: space-between;
   border: 0.0625rem solid #ddd;
 `;
@@ -17,15 +17,15 @@ const SearchBarComponent = styled.div`
 const SearchInput = styled.input.attrs({ type: 'text' })`
   outline: 'none';
   border: none;
-  font-size: 1 rem;
+  font-size: 1rem;
   padding: 0.625rem;
   flex: 1;
   color: #5a5a5a;
 `;
 
 const SearchButton = styled.button`
-  height: 2.1875rem;
-  width: 2.0625rem;
+  height: 2.5rem;
+  width: 2.5rem;
   outline: none;
   background-color: white;
   cursor: pointer;
@@ -65,7 +65,7 @@ export const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
       <SearchInput
         onChange={handleSearchTextChange}
         value={searchText}
-        placeholder="Enter repository name ..."
+        placeholder="Enter project name ..."
         onKeyPress={handleSearchEnter}
         data-testid="search_input"
       />

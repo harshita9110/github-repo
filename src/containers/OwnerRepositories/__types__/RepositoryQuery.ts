@@ -5,13 +5,24 @@ export interface RepositoryNode {
     id: string|null;
     openGraphImageUrl: string|null;
     description:string|null;
+    stargazers: StarGazers|null;
+}
+
+export interface StarGazers {
+    totalCount:number|null;
 }
 
 export interface RepositoryEdges { node: RepositoryNode|null }
 
 export interface Repositories { edges: (RepositoryEdges|null)[] }
 
-export interface Organization { repositories: Repositories|null }
+export interface Organization { 
+    name: string|null;
+    location:string|null;
+    description:string|null;
+    avatarUrl:string|null;
+    repositories: Repositories|null;
+}
 
 export interface OwnerRepositoriesType { organization: Organization|null }
 

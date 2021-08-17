@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLazyQuery } from '@apollo/client';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -10,11 +11,16 @@ import { SearchBar } from '../../components/SearchBar';
 import { RepositoryTile } from '../../components/RepositoryTile';
 import { RepositoryDetails } from '../RepositoryDetails';
 
+interface MatchParams {
+  project: string;
+}
+
+interface RepositoryProps extends Partial<RouteComponentProps<MatchParams>> {}
+
 const RepositoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 0 0 100%;
-  height: 100vh;
   align-items: center;
   padding: 1rem;
 `;
@@ -22,15 +28,23 @@ const RepositoryContainer = styled.div`
 const RepositoryGrid = styled.div`
   display: flex;
   margin-top: 1rem;
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px lightgray;
+`;
+
+const StyledRow = styled(Row)`
+  border-bottom: 1px solid #d3d3d3;
 `;
 
 const StyledCol = styled(Col)`
-  border: 1px solid #5a5a5a;
   padding: 0.75rem;
   font-size: 1rem;
 `;
 const ErrorContainer = styled.div`
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   padding: 0.75rem;
   font-size: 1rem;
   color: #ff0000;
@@ -47,14 +61,29 @@ const Message = styled.div`
   font-size: 1rem;
 `;
 
-export const Repository: FC = () => {
-  const [owner, setOwner] = useState<string>('');
+const RepositoryName = styled.a`
+  margin-left: 0.5rem;
+  color: #055c9d;
+`;
+
+export const OwnerRepositories: FC<RepositoryProps> = ({ match }) => {
+  const [owner, setOwner] = useState<string>(match?.params.project || '');
   const [getOwnerRepositories, { loading, error, data }] = useLazyQuery<
     OwnerRepositoriesType,
     OwnerRepositoryQueryArgument
   >(OwnerRepositoryQuery);
 
+  useEffect(() => {
+    if (owner) {
+      getOwnerRepositories({
+        variables: { owner: owner },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const repositories = data?.organization?.repositories?.edges || null;
+  const organization = data?.organization;
 
   const handleRepositorySearch = (repoOwner: string) => {
     setOwner(repoOwner);
@@ -65,7 +94,7 @@ export const Repository: FC = () => {
 
   return (
     <RepositoryContainer data-testid="repository-container">
-      <SearchBar onSearch={handleRepositorySearch} />
+      {!match?.params.project && <SearchBar onSearch={handleRepositorySearch} />}
       {loading && <Loader />}
       {error && (
         <ErrorContainer>
@@ -73,19 +102,28 @@ export const Repository: FC = () => {
           {`Unable to get repositories for owner ${owner}`}
         </ErrorContainer>
       )}
+      {organization && (
+        <RepositoryTile
+          imageUrl={organization.avatarUrl}
+          title={organization.name}
+          description={organization.description}
+          location={organization.location}
+        />
+      )}
       {repositories && (
         <RepositoryGrid>
           <Grid>
             {repositories.map((repo, index) => {
               const details = repo?.node;
               if (!details) {
-                return <div />;
+                return <Message>No details were found</Message>;
               }
-              const { id, name, openGraphImageUrl, forkCount, description, url } = details;
+              const { id, name, forkCount, description, url, stargazers } = details;
               return (
-                <Row key={index}>
+                <StyledRow key={index}>
                   <StyledCol key={id} xs={2}>
-                    <RepositoryTile title={name} imageUrl={openGraphImageUrl} url={url} />
+                    {url && <RepositoryName href={url}>{name}</RepositoryName>}
+                    {!url && <div>{name}</div>}
                   </StyledCol>
                   <StyledCol key={`${id}-desc`} lg>
                     <RepositoryDetails
@@ -94,9 +132,10 @@ export const Repository: FC = () => {
                       name={name || ''}
                       owner={owner}
                       forkCount={forkCount}
+                      stargazers={stargazers?.totalCount}
                     />
                   </StyledCol>
-                </Row>
+                </StyledRow>
               );
             })}
           </Grid>
