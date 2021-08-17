@@ -14,7 +14,6 @@ export const OwnerRepositoryQuery  = gql`
                         url
                         forkCount
                         id
-                        openGraphImageUrl
                         description
                         stargazers {
                             totalCount

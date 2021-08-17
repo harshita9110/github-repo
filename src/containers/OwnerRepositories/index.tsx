@@ -66,7 +66,7 @@ const RepositoryName = styled.a`
   color: #055c9d;
 `;
 
-export const OwnerRepositories: FC<RepositoryProps> = ({ match }) => {
+export const OwnerRepositories: FC<RepositoryProps> = ({ match, history }) => {
   const [owner, setOwner] = useState<string>(match?.params.project || '');
   const [getOwnerRepositories, { loading, error, data }] = useLazyQuery<
     OwnerRepositoriesType,
@@ -86,7 +86,9 @@ export const OwnerRepositories: FC<RepositoryProps> = ({ match }) => {
   const organization = data?.organization;
 
   const handleRepositorySearch = (repoOwner: string) => {
+    history?.push(`/${repoOwner}`);
     setOwner(repoOwner);
+
     getOwnerRepositories({
       variables: { owner: repoOwner },
     });
@@ -94,7 +96,7 @@ export const OwnerRepositories: FC<RepositoryProps> = ({ match }) => {
 
   return (
     <RepositoryContainer data-testid="repository-container">
-      {!match?.params.project && <SearchBar onSearch={handleRepositorySearch} />}
+      {<SearchBar onSearch={handleRepositorySearch} />}
       {loading && <Loader />}
       {error && (
         <ErrorContainer>

@@ -3,7 +3,6 @@ export interface RepositoryNode {
     url: string|null;
     forkCount:number|null; 
     id: string|null;
-    openGraphImageUrl: string|null;
     description:string|null;
     stargazers: StarGazers|null;
 }

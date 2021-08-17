@@ -2,8 +2,6 @@ import React from 'react';
 import { OwnerRepositories } from './containers/OwnerRepositories';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
-import './App.css';
-
 function App() {
   return (
     <Router>

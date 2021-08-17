@@ -65,7 +65,7 @@ export const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
       <SearchInput
         onChange={handleSearchTextChange}
         value={searchText}
-        placeholder="Enter project name ..."
+        placeholder="Enter owner name ..."
         onKeyPress={handleSearchEnter}
         data-testid="search_input"
       />
